@@ -1,0 +1,8 @@
+/* CSS for Resume component */
+
+/* position-history education-history */
+
+.resume-history{
+	display:flex;
+	flex-direction:column;
+}

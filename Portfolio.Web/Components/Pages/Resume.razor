@@ -1,0 +1,62 @@
+﻿@page "/resume"
+
+@using Portfolio.Core.DTO
+@using Portfolio.Data.Services
+@inject IResumeService ResumeService
+
+
+<h1>Resume</h1>
+
+
+@* <h2>Professional Qualifications</h2>
+ *@
+<h2>10 years of building and maintaining .Net applications across a wide array of industries</h2>
+
+@if(_resume == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div id="resume-history" class="resume-history">
+
+        <h3>Professional History</h3>
+
+        @foreach (var position in _resume.Positions)
+        {
+            <b>@position.Company.CompanyName</b>
+            <span>@position.StartDate.ToString("MMM yyyy") - @position.EndDate.ToString("MMM yyyy")</span>
+
+            <ul>
+            @foreach (var exp in position.Experiences)
+            {
+                <li>@exp.Description</li>    
+            }
+            </ul>
+
+            <p>@String.Join(", ", position.Qualifications.Select(x => x.Description))</p>
+        }
+    </div>
+
+    <div id="education-history" class="resume-history">
+
+        <h3>Education History</h3>
+
+        @foreach(var edu in _resume.Education)
+        {
+            <b>@edu.SchoolName</b>
+            <span>@edu.StartDate.ToString("MMM yyyy") - @edu.EndDate.ToString("MMM yyyy")</span>
+        }
+    </div>
+}
+
+
+@code {
+    private Portfolio.Core.DTO.Resume _resume;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _resume = await ResumeService.GetResumeAsync();
+    }
+
+}
