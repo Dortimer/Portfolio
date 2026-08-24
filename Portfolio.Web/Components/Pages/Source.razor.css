@@ -1,0 +1,49 @@
+
+.source-code{
+	display:flex;
+	flex-direction:row;
+}
+
+.github-files{
+	margin-right:15px;
+}
+
+.github-files-header{
+	
+}
+.github-files-header img{
+	height:20px;
+}
+
+.github-preview {
+	display: flex;
+	flex-direction: column;
+}
+
+.github-preview-header{
+	flex-direction:row;
+}
+
+.folder-icon, .file-icon{
+	cursor:pointer;
+	display:inline-flex;
+	align-items:center;
+}
+
+.folder-icon::before,
+.file-icon::before {
+	content: "";
+	width: 20px;
+	height: 20px;
+	background-color: white;
+}
+
+.folder-icon::before {
+	mask-image: url("/images/folder.svg");
+	-webkit-mask-image: url("/images/folder.svg");
+}
+
+.file-icon::before {
+	mask-image: url("/images/file.svg");
+	-webkit-mask-image: url("/images/file.svg");
+}

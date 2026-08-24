@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Portfolio.Data.Data;
 using Portfolio.Data.Services;
 using Portfolio.Web.Components;
+using Portfolio.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,14 @@ builder.Services.AddDbContext<PortfolioDbContext>(options =>
 
 // user defined services
 builder.Services.AddScoped<IResumeService, ResumeService>();
+builder.Services.AddHttpClient<IGitHubService, GitHubService>(client => 
+{
+	client.BaseAddress = new Uri("https://api.github.com/");
+	client.DefaultRequestHeaders.Add("Accept", "application/vnd.github+json");
+	client.DefaultRequestHeaders.Add("User-Agent", "Portfolio");
 
+	client.DefaultRequestHeaders.Add("X-GitHub-Api-Version", "2026-03-10");
+});
 
 
 var app = builder.Build();

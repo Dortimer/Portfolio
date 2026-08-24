@@ -1,5 +1,128 @@
-﻿<h3>Source</h3>
+﻿@using Portfolio.Core.DTO.GitHub
+@using Portfolio.Web.Services
+@inject IGitHubService GitHubService
+
+@page "/source"
+
+@rendermode InteractiveServer
+
+<h3>Source</h3>
+
+<div class="source-code">
+
+    @if(Contents == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+        <div class="github-files">
+
+            <div class="github-files-header">
+                <a href="@SelectedFile.HtmlUrl" target="_blank" rel="noopener noreferrer">
+                    <img src="/images/GitHub_Lockup_White.png" />
+                </a>
+            </div>
+
+            @foreach(var c in Contents)
+            {
+                <div class="github-file-item">
+                    @if(c.Type == "dir")
+                    {
+                        <span class="folder-icon" @onclick="() => LoadFolder(c)">@c.Name</span>
+                    }
+                    else
+                    {
+                        <span class="file-icon" @onclick="() => LoadFile(c)">@c.Name</span>
+                    }
+                </div>
+            }
+
+            @if(SelectedFile.Path != "") // no path means we're at the top level'
+            {
+                <div class="github-file-item navigate-up">
+                    <span class="folder-icon" @onclick="() => NavigateUp()">
+                        ../
+                    </span>
+                </div>
+            }
+        </div>
+
+        <div class="github-preview">
+            <div class="github-preview-header">
+                <div class="breadcrumb">
+                    @SelectedFile.Path
+                </div>
+            </div>
+
+            <div class="github-preview-content">
+                <pre class="code-preview">
+                    <code>
+                        @FileContent
+                    </code>
+                </pre>
+            </div>
+        </div>
+    }
+</div>
+
 
 @code {
+    private List<GitHubContent> Contents = [];
 
+    private GitHubContent SelectedFile = new GitHubContent();
+
+    private string FileContent = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFolder(new GitHubContent());
+    }
+
+    private async Task LoadFolder(GitHubContent folder)
+    {
+        Contents = await GitHubService.GetRepoDetailsAsync(folder.Path);
+
+        Contents = Contents.OrderBy(x => x.Type).ToList();
+
+        SelectedFile = folder;
+    }
+
+    private async Task LoadFile(GitHubContent file)
+    {
+        SelectedFile = file;
+
+        var result = await GitHubService.GetFileDetailsAsync(file.Path);
+
+        var data = Convert.FromBase64String(result.Content);
+
+        FileContent = System.Text.Encoding.UTF8.GetString(data); ;
+    }
+
+    private async Task NavigateUp()
+    {
+        var path = SelectedFile.Path;
+
+        // always remove file name first
+        if(SelectedFile.Type == "file")
+        {
+            path = path.Substring(0, path.LastIndexOf('/'));
+            // todo - clear file preview?
+        }
+
+        // no '/' means it's one step down from top level
+        if (!path.Contains('/'))
+        {
+            path = string.Empty;
+        }
+        else
+        {
+            path = path.Substring(0, path.LastIndexOf('/'));
+        }
+
+        await LoadFolder(new GitHubContent
+        {
+            Path = path ?? ""
+        });
+    }
 }
