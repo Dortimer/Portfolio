@@ -11,7 +11,7 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<PortfolioDbContext>(options =>
-	options.UseSqlServer(builder.Configuration.GetConnectionString("PortfolioDatabase"))
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 
