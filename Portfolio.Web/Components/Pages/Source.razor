@@ -6,7 +6,7 @@
 
 @rendermode InteractiveServer
 
-<h3>Source</h3>
+<h2>Source</h2>
 
 <div class="source-code">
 
@@ -24,30 +24,31 @@
                 </a>
             </div>
 
-            @foreach(var c in Contents)
-            {
-                <div class="github-file-item">
-                    @if(c.Type == "dir")
-                    {
-                        <span class="folder-icon" @onclick="() => LoadFolder(c)">@c.Name</span>
-                    }
-                    else
-                    {
-                        <span class="file-icon" @onclick="() => LoadFile(c)">@c.Name</span>
-                    }
-                </div>
-            }
+            <div class="github-files-body">
+                @foreach(var c in Contents)
+                {
+                    <div class="github-file-item">
+                        @if(c.Type == "dir")
+                        {
+                            <span class="folder-icon" @onclick="() => LoadFolder(c)">@c.Name</span>
+                        }
+                        else
+                        {
+                            <span class="file-icon" @onclick="() => LoadFile(c)">@c.Name</span>
+                        }
+                    </div>
+                }
 
-            @if(SelectedFile.Path != "") // no path means we're at the 'top level'
-            {
-                <div class="github-file-item navigate-up">
-                    <span class="folder-icon" @onclick="() => NavigateUp()">
-                        ../
-                    </span>
-                </div>
-            }
+                @if(SelectedFile.Path != "") // no path means we're at the 'top level'
+                {
+                    <div class="github-file-item navigate-up">
+                        <span class="folder-icon" @onclick="() => NavigateUp()">
+                            ../
+                        </span>
+                    </div>
+                }
+            </div>
         </div>
-
         <div class="github-preview">
             <div class="github-preview-header">
                 <div class="breadcrumb">
@@ -87,7 +88,7 @@
 
         SelectedFile = folder;
 
-        if(string.IsNullOrEmpty(folder.Url)) // todo - make sure folder.Url is the right property
+        if(string.IsNullOrEmpty(folder.Url))
         {
             FileContent = "";
         }

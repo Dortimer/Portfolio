@@ -1,22 +1,56 @@
-﻿    
+﻿@rendermode InteractiveServer
 
+@* <img src="./images/catsfighting.jpg"/> *@
 
+<div class="menu">
+    <div class="mobile">
+        <button @onclick="ToggleMenu" class="nav-menu-toggle">
+            <img src="/images/ff-hamburger.svg" />
+        </button>
+    </div>
 
-<div id="nav" class="nav">
-    @* *@
-    <NavLink href="/">
-        @* <img src="./images/catsfighting.jpg"/> *@ Home
-    </NavLink>
+    <div id="nav" class="nav @(menuOpen ? "mobile-nav-open" : "")" tab-index="0">
 
-    <NavLink href="resume">
-        Resume
-    </NavLink>
+        <NavLink href="/" @onclick="ToggleMenu">
+            Home
+        </NavLink>
 
-    <NavLink href="source">
-        Source Code
-    </NavLink>
+        <NavLink href="resume" @onclick="ToggleMenu">
+            Resume
+        </NavLink>
 
-    <NavLink href="schema">
-        Schema & Database Design
-    </NavLink>
+        <NavLink href="source" @onclick="ToggleMenu">
+            Source Code
+        </NavLink>
+
+        <NavLink href="schema" @onclick="ToggleMenu">
+            Schema & Database Design
+        </NavLink>
+    </div>
+
+    <div class="backdrop mobile @(menuOpen ? "visible" : "")" @onclick="ToggleMenu"></div>
 </div>
+
+
+@code{
+
+    private bool menuOpen = false;
+
+    [JSInvokable]
+    private async Task ToggleMenu()
+    {
+        menuOpen = !menuOpen;
+        StateHasChanged();
+        // if (menuOpen)
+        // {
+        //     // hide menu after 10 seconds without interaction
+        //     //await Task.Delay(10000);
+        //     //menuOpen = false;
+        //     StateHasChanged();
+        // }
+        // else
+        // {
+        //     StateHasChanged();
+        // }
+    }
+}

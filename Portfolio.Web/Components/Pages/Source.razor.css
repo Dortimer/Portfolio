@@ -2,12 +2,15 @@
 .source-code{
 	display:flex;
 	flex-direction:row;
+	height:70vh;
 }
 
 .github-files{
 	margin-right:15px;
+	padding:20px;
 	width:25%;
 	border:1px solid white;
+	text-overflow:ellipsis;
 }
 
 .github-files-header{
@@ -48,4 +51,25 @@
 .file-icon::before {
 	mask-image: url("/images/file.svg");
 	-webkit-mask-image: url("/images/file.svg");
+}
+
+
+/* Mobile */
+@media (max-width: 768px){
+	.source-code{
+		flex-direction:column;
+		width:100%;
+	}
+
+	.github-files{
+		width:72vw;
+		
+		/* todo - this is a bad way to handle this, need to investigate further */
+		height:10vh;
+		min-height:10vh;
+		max-height:10vh;
+
+		overflow:auto;
+		margin-bottom:2vh;
+	}
 }
